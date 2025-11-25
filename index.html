@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escape the Maze</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+   body {
+  font-family: 'Merriweather', serif;
+  background-image: url('https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #0d3a23;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  min-height: 100vh;
+}
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 10px 0 6px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .top-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .ui-panel {
+      background: #aef5b5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 6px 0;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    #keys-display {
+      display: flex;
+      gap: 3px;
+    }
+
+    .key-icon {
+	  width: 20px;
+	  height: 20px;
+	  border-radius: 4px;
+	  background-size: cover;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  opacity: 0.3; /* ещё не собран */
+	}
+	.key-icon.collected {
+	opacity: 1;   /* собран — яркий */
+	}
+	
+	/* Первые 3 индикатора — первая еда */
+	#key-0,
+	#key-1,
+	#key-2 {
+	background-image: url('https://i.ibb.co/RTxYh3tG/food2-png.png');
+	}
+	
+	/* Следующие 3 индикатора — вторая еда */
+	#key-3,
+	#key-4,
+	#key-5 {
+	background-image: url('https://i.ibb.co/ymqs99Wd/food1-png.png');
+	}
+	
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      margin: 8px 0;
+    }
+
+    canvas {
+      background: #ffffff;
+      border-radius: 6px;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .game-area {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 600px;
+      align-items: center;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .arrow-btn:hover {
+      background: #089ab8;
+      transform: scale(1.05);
+    }
+	.arrow-btn {
+	width: 48px;
+	height:48px;
+	padding: 0;
+	margin: 0;
+	background: transparent !important;
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
+	border-radius: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	}
+	
+    .arrow-btn:active {
+      transform: scale(0.97);
+    }
+
+    #up { width: 48px; align-self: center; }
+    #left, #right { width: 48px; }
+    #down { width: 48px; align-self: center; }
+
+    .btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    .btn:hover {
+      background: #0da473;
+      transform: translateY(-1px);
+    }
+	
+	button,
+	.arrow-btn,
+	.btn {
+	outline: none;
+	-webkit-tap-highlight-color: transparent; /* для мобильных браузеров */
+	}
+	
+	button:focus,
+	button:focus-visible,
+	.arrow-btn:focus,
+	.arrow-btn:focus-visible,
+	.btn:focus,
+	.btn:focus-visible {
+	outline: none;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* оставляем только нашу тень */
+	}
+	
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #aef5b5;
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      max-width: 90%;
+      width: 360px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      color: #0d3a23;
+    }
+
+    .modal p {
+      font-size: 1.1rem;
+      margin: 8px 0;
+    }
+
+    @media (max-width: 500px) {
+      .game-area {
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+      }
+      .arrow-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+      }
+      #up, #down { width: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Escape the Maze</h1>
+
+  <div class="top-bar">
+    <button id="new-maze" class="btn">New Maze</button>
+    <button id="replay" class="btn">Replay</button>
+  </div>
+
+  <div class="ui-panel">
+    Keys: <span id="keys-collected">0</span>/6
+    <div id="keys-display">
+      <div class="key-icon" id="key-0"></div>
+      <div class="key-icon" id="key-1"></div>
+      <div class="key-icon" id="key-2"></div>
+      <div class="key-icon" id="key-3"></div>
+      <div class="key-icon" id="key-4"></div>
+      <div class="key-icon" id="key-5"></div>
+    </div>
+  </div>
+
+  <div class="game-area">
+    <div id="canvas-container">
+      <canvas id="mazeCanvas"></canvas>
+    </div>
+    <div class="controls">
+  <!-- UP -->
+  <button id="up" class="arrow-btn">
+    <img src="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png"
+         alt="up"
+         style="width: 100%; height: 100%; object-fit: contain;">
+  </button>
+
+  <!-- LEFT + RIGHT -->
+  <div style="display:flex; gap:10px; margin-top: 5px; margin-bottom: 5px;">
+    <button id="left" class="arrow-btn">
+      <img src="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png"
+           alt="left"
+           style="width: 100%; height: 100%; object-fit: contain;">
+    </button>
+
+    <button id="right" class="arrow-btn">
+      <img src="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png"
+           alt="right"
+           style="width: 100%; height: 100%; object-fit: contain;">
+    </button>
+  </div>
+
+  <!-- DOWN -->
+  <button id="down" class="arrow-btn">
+    <img src="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png"
+         alt="down"
+         style="width: 100%; height: 100%; object-fit: contain;">
+  </button>
+</div>
+
+  <div id="win-modal" class="modal">
+    <div class="modal-content">
+      <h2>🎉 You Escaped!</h2>
+      <p><strong>⭐ Perfect route!</strong></p>
+      <p>Total moves: <span id="final-moves">0</span></p>
+      <button id="close-modal" class="btn" style="margin-top: 12px;">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const ROWS = 11;
+    const COLS = 11;
+    const WALL = 1;
+    const PATH = 0;
+    const PLAYER_COLOR = '#06b6d4';
+    const GOAL_COLOR = '#10b981';
+    const KEY_COLOR = '#fbbf24';
+	
+	// картинка героя
+	const playerImg = new Image();
+	playerImg.src = 'https://i.ibb.co/tp4n66N4/hero-png.png';
+	playerImg.onload = () => {
+  if (canvas && ctx) render();
+};
+	
+	// картинки ключей
+	const keyImg1 = new Image();
+	keyImg1.src = 'https://i.ibb.co/RTxYh3tG/food2-png.png';
+	
+	const keyImg2 = new Image();
+	keyImg2.src = 'https://i.ibb.co/ymqs99Wd/food1-png.png';
+	
+	// картинка выхода (goal)
+	const goalImg = new Image();
+	goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
+	goalImg.onload = () => {
+	if (canvas && ctx) render();
+};
+	 
+    // Глобальное состояние
+    let maze = [];
+    let originalKeys = []; // сохранённые позиции ключей для Replay
+    let originalGoal = null; // сохранённая цель (если есть)
+    let player = { x: 1, y: 1 };
+    let keys = [];
+    let goal = null;
+    let collectedKeys = 0;
+    let moves = 0;
+    let ctx, canvas;
+    let cellSize;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('mazeCanvas');
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      generateNewMaze(); // первый запуск — новый лабиринт
+      render();
+
+      document.getElementById('new-maze').addEventListener('click', generateNewMaze);
+      document.getElementById('replay').addEventListener('click', replay);
+      document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('win-modal').style.display = 'none';
+        replay(); // после победы — Replay (сохраняет лабиринт)
+      });
+
+      // Стрелки
+      document.getElementById('up').addEventListener('click', () => movePlayer(0, -1));
+      document.getElementById('down').addEventListener('click', () => movePlayer(0, 1));
+      document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0));
+      document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
+
+      document.addEventListener('keydown', (e) => {
+        switch (e.key) {
+          case 'ArrowUp': movePlayer(0, -1); break;
+          case 'ArrowDown': movePlayer(0, 1); break;
+          case 'ArrowLeft': movePlayer(-1, 0); break;
+          case 'ArrowRight': movePlayer(1, 0); break;
+        }
+      });
+    });
+
+    function resizeCanvas() {
+      const container = document.getElementById('canvas-container');
+      const size = Math.min(container.clientWidth, container.clientHeight);
+      canvas.width = size;
+      canvas.height = size;
+      cellSize = size / COLS;
+      if (maze.length > 0) render();
+    }
+
+    // === НОВЫЙ ЛАБИРИНТ ===
+    function generateNewMaze() {
+      // Генерация лабиринта (DFS)
+      maze = Array(ROWS).fill().map(() => Array(COLS).fill(WALL));
+      const stack = [{ x: 1, y: 1 }];
+      maze[1][1] = PATH;
+
+      const directions = [
+        { dx: 0, dy: -2 },
+        { dx: 2, dy: 0 },
+        { dx: 0, dy: 2 },
+        { dx: -2, dy: 0 }
+      ];
+
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        const neighbors = [];
+
+        for (const dir of directions) {
+          const nx = current.x + dir.dx;
+          const ny = current.y + dir.dy;
+          if (nx > 0 && nx < COLS - 1 && ny > 0 && ny < ROWS - 1 && maze[ny][nx] === WALL) {
+            neighbors.push({ x: nx, y: ny, dir });
+          }
+        }
+
+        if (neighbors.length > 0) {
+          const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+          const wallX = current.x + next.dir.dx / 2;
+          const wallY = current.y + next.dir.dy / 2;
+          maze[wallY][wallX] = PATH;
+          maze[next.y][next.x] = PATH;
+          stack.push(next);
+        } else {
+          stack.pop();
+        }
+      }
+
+      // Получение всех достижимых клеток
+      const reachable = getReachableCells(maze, 1, 1);
+      const candidates = reachable.filter(p => !(p.x === 1 && p.y === 1));
+
+      // Размещение 6 ключей
+      originalKeys = [];
+      for (let i = 0; i < 6 && candidates.length > 0; i++) {
+        const idx = Math.floor(Math.random() * candidates.length);
+        const pos = candidates.splice(idx, 1)[0];
+        originalKeys.push({ x: pos.x, y: pos.y });
+      }
+
+      // Запас (на случай малого пространства)
+      while (originalKeys.length < 6) {
+        const idx = Math.floor(Math.random() * reachable.length);
+        const pos = reachable[idx];
+        if (pos.x !== 1 || pos.y !== 1) {
+          originalKeys.push({ x: pos.x, y: pos.y });
+        }
+      }
+
+      // Цель пока не генерируется — только после сбора ключей
+      originalGoal = null;
+
+      // Сброс игрового состояния
+      resetGameState();
+      render();
+    }
+
+    // === REPLAY: сохраняет лабиринт, ключи, цель ===
+    function replay() {
+      resetGameState();
+      render();
+    }
+
+    // Сброс только игрового состояния (не лабиринта!)
+    function resetGameState() {
+      player = { x: 1, y: 1 };
+      moves = 0;
+
+      // Восстанавливаем позиции ключей (но сбрасываем collected)
+      keys = originalKeys.map(k => ({ x: k.x, y: k.y, collected: false }));
+      collectedKeys = 0;
+
+      // Восстанавливаем цель, если она уже была сгенерирована ранее
+      goal = originalGoal ? { x: originalGoal.x, y: originalGoal.y } : null;
+
+      updateKeysUI();
+    }
+
+    // BFS: получение всех достижимых клеток
+    function getReachableCells(maze, sx, sy) {
+      const visited = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+      const result = [];
+      const queue = [{ x: sx, y: sy }];
+      visited[sy][sx] = true;
+      const dirs = [[0,1],[0,-1],[1,0],[-1,0]];
+
+      while (queue.length) {
+        const {x, y} = queue.shift();
+        result.push({x, y});
+        for (const [dx, dy] of dirs) {
+          const nx = x + dx, ny = y + dy;
+          if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && !visited[ny][nx] && maze[ny][nx] === PATH) {
+            visited[ny][nx] = true;
+            queue.push({x: nx, y: ny});
+          }
+        }
+      }
+      return result;
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Стены
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          if (maze[y][x] === WALL) {
+            ctx.fillStyle = '#6FD67F';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          }
+        }
+      }
+
+         // Ключи — первые 3 одной картинкой, следующие 3 другой
+      keys.forEach((key, index) => {
+        if (!key.collected) {
+          const size = cellSize * 1.5;
+
+          // выбираем картинку: индексы 0,1,2 → первая; 3,4,5 → вторая
+          const img = index < 3 ? keyImg1 : keyImg2;
+
+          if (img.complete && img.naturalWidth) {
+            ctx.drawImage(
+              img,
+              (key.x + 0.5) * cellSize - size / 2,
+              (key.y + 0.5) * cellSize - size / 2,
+              size,
+              size
+            );
+          } else {
+            // запасной вариант — кружок, если картинка ещё не загрузилась
+            ctx.fillStyle = KEY_COLOR;
+            ctx.beginPath();
+            ctx.arc(
+              (key.x + 0.5) * cellSize,
+              (key.y + 0.5) * cellSize,
+              cellSize * 0.3,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+          }
+        }
+      });
+
+     // Выход (если есть)
+if (goal) {
+  if (goalImg.complete && goalImg.naturalWidth) {
+    const size = cellSize * 1.8; // регулируй размер двери
+    ctx.drawImage(
+      goalImg,
+      (goal.x + 0.5) * cellSize - size / 2,
+      (goal.y + 0.5) * cellSize - size / 2,
+      size,
+      size
+    );
+  } else {
+    // запасной круг, если изображение не загрузилось
+    ctx.fillStyle = GOAL_COLOR;
+    ctx.beginPath();
+    ctx.arc(
+      (goal.x + 0.5) * cellSize,
+      (goal.y + 0.5) * cellSize,
+      cellSize * 0.4,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+}
+
+      // Игрок
+      if (playerImg.complete && playerImg.naturalWidth) {
+        const size = cellSize * 2.0;
+        ctx.drawImage(
+          playerImg,
+          (player.x + 0.5) * cellSize - size / 2,
+          (player.y + 0.5) * cellSize - size / 2,
+          size,
+          size
+        );
+      } else {
+        ctx.fillStyle = PLAYER_COLOR;
+        ctx.beginPath();
+        ctx.arc(
+          (player.x + 0.5) * cellSize,
+          (player.y + 0.5) * cellSize,
+          cellSize * 0.35,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+      }
+    }
+
+    function movePlayer(dx, dy) {
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      if (newX >= 0 && newX < COLS && newY >= 0 && newY < ROWS && maze[newY][newX] === PATH) {
+        player.x = newX;
+        player.y = newY;
+        moves++;
+
+        // Сбор ключа
+        for (const key of keys) {
+          if (!key.collected && key.x === player.x && key.y === player.y) {
+            key.collected = true;
+            collectedKeys++;
+            updateKeysUI();
+            checkAllKeysCollected();
+            break;
+          }
+        }
+
+        // Победа
+        if (goal && collectedKeys === 6 && player.x === goal.x && player.y === goal.y) {
+          showWinModal();
+          return;
+        }
+
+        render();
+      }
+    }
+
+   function updateKeysUI() {
+  // обновляем число собранных ключей
+  document.getElementById('keys-collected').textContent = collectedKeys;
+
+  // проходим по массиву keys и иконкам 1 к 1
+  keys.forEach((key, index) => {
+    const el = document.getElementById(`key-${index}`);
+    if (!el) return;
+    // если этот конкретный ключ собран — добавляем .collected,
+    // если нет — убираем
+    el.classList.toggle('collected', key.collected);
+  });
+}
+
+    function checkAllKeysCollected() {
+      if (collectedKeys === 6 && !goal) {
+        const reachable = getReachableCells(maze, 1, 1);
+        const candidates = reachable.filter(p =>
+          !(p.x === player.x && p.y === player.y) &&
+          !keys.some(k => k.x === p.x && k.y === p.y)
+        );
+
+        if (candidates.length > 0) {
+          const idx = Math.floor(Math.random() * candidates.length);
+          goal = candidates[idx];
+          // Сохраняем для Replay
+          originalGoal = { x: goal.x, y: goal.y };
+        } else {
+          goal = { x: COLS - 2, y: ROWS - 2 };
+          originalGoal = { x: goal.x, y: goal.y };
+        }
+        render();
+      }
+    }
+
+    function showWinModal() {
+      document.getElementById('final-moves').textContent = moves;
+      document.getElementById('win-modal').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
