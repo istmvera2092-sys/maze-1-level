@@ -4,7 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Escape the Maze</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Preload важных картинок (герой, еда, дверь, стрелки, фон) -->
+  <link rel="preload" as="image" href="https://i.ibb.co/Cp73qkf2/hero-png.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/nNWShMyS/food2-png.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/ymqs99Wd/food1-png.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png">
+  <link rel="preload" as="image" href="https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png">
+
   <style>
     * {
       margin: 0;
@@ -14,7 +27,8 @@
 
     body {
       font-family: 'Merriweather', serif;
-      background-image: url('https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png');
+      /* сначала просто фон-цвет, чтобы страница отрисовалась быстро */
+      background-color: #e4f9ed;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -222,7 +236,7 @@
       .controls {
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: центр;
+        justify-content: center; /* было "центр" — ломало CSS */
         width: 100%;
       }
       .arrow-btn {
@@ -261,31 +275,39 @@
     <div class="controls">
       <!-- UP -->
       <button id="up" class="arrow-btn">
-        <img src="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png"
-              alt="up"
-              style="width: 100%; height: 100%; object-fit: contain;">
+        <img
+          src="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png"
+          alt="up"
+          loading="lazy"
+          style="width: 100%; height: 100%; object-fit: contain;">
       </button>
 
       <!-- LEFT + RIGHT -->
       <div style="display:flex; gap:10px; margin-top: 5px; margin-bottom: 5px;">
         <button id="left" class="arrow-btn">
-          <img src="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png"
-                alt="left"
-                style="width: 100%; height: 100%; object-fit: contain;">
+          <img
+            src="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png"
+            alt="left"
+            loading="lazy"
+            style="width: 100%; height: 100%; object-fit: contain;">
         </button>
 
         <button id="right" class="arrow-btn">
-          <img src="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png"
-                alt="right"
-                style="width: 100%; height: 100%; object-fit: contain;">
+          <img
+            src="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png"
+            alt="right"
+            loading="lazy"
+            style="width: 100%; height: 100%; object-fit: contain;">
         </button>
       </div>
 
       <!-- DOWN -->
       <button id="down" class="arrow-btn">
-        <img src="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png"
-              alt="down"
-              style="width: 100%; height: 100%; object-fit: contain;">
+        <img
+          src="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png"
+          alt="down"
+          loading="lazy"
+          style="width: 100%; height: 100%; object-fit: contain;">
       </button>
     </div>
   </div>
@@ -323,15 +345,6 @@
     const goalImg = new Image();
     goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
 
-    // ✅ как только ЛЮБАЯ из картинок прогрузилась – перерисовываем поле
-    [playerImg, keyImg1, keyImg2, goalImg].forEach(img => {
-      img.addEventListener('load', () => {
-        if (canvas && ctx && maze.length > 0) {
-          render();
-        }
-      });
-    });
-
     // Глобальное состояние
     let maze = [];
     let originalKeys = []; // сохранённые позиции ключей для Replay
@@ -343,6 +356,15 @@
     let moves = 0;
     let ctx, canvas;
     let cellSize;
+
+    // Перерисовываем, когда загрузились картинки (не блокирует основную логику)
+    [playerImg, keyImg1, keyImg2, goalImg].forEach(img => {
+      img.addEventListener('load', () => {
+        if (canvas && ctx && maze.length > 0) {
+          render();
+        }
+      });
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
       canvas = document.getElementById('mazeCanvas');
@@ -668,6 +690,12 @@
       document.getElementById('final-moves').textContent = moves;
       document.getElementById('win-modal').style.display = 'flex';
     }
+
+    // 🖼️ Подгружаем тяжёлый фон ПОСЛЕ полной загрузки страницы
+    window.addEventListener('load', () => {
+      document.body.style.backgroundImage =
+        "url('https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png')";
+    });
   </script>
 </body>
 </html>
