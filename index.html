@@ -307,25 +307,28 @@
     const KEY_COLOR = '#fbbf24';
 	
 	// картинка героя
-	const playerImg = new Image();
-	playerImg.src = 'https://i.ibb.co/tp4n66N4/hero-png.png';
-	playerImg.onload = () => {
-  if (canvas && ctx) render();
-};
-	
-	// картинки ключей
-	const keyImg1 = new Image();
-	keyImg1.src = 'https://i.ibb.co/RTxYh3tG/food2-png.png';
-	
-	const keyImg2 = new Image();
-	keyImg2.src = 'https://i.ibb.co/ymqs99Wd/food1-png.png';
-	
-	// картинка выхода (goal)
-	const goalImg = new Image();
-	goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
-	goalImg.onload = () => {
-	if (canvas && ctx) render();
-};
+const playerImg = new Image();
+playerImg.src = 'https://i.ibb.co/tp4n66N4/hero-png.png';
+
+// картинки ключей
+const keyImg1 = new Image();
+keyImg1.src = 'https://i.ibb.co/RTxYh3tG/food2-png.png';
+
+const keyImg2 = new Image();
+keyImg2.src = 'https://i.ibb.co/ymqs99Wd/food1-png.png';
+
+// картинка выхода (goal)
+const goalImg = new Image();
+goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
+
+// ✅ как только ЛЮБАЯ из картинок прогрузилась – перерисовываем поле
+[playerImg, keyImg1, keyImg2, goalImg].forEach(img => {
+  img.addEventListener('load', () => {
+    if (canvas && ctx && maze.length > 0) {
+      render();
+    }
+  });
+});
 	 
     // Глобальное состояние
     let maze = [];
@@ -339,36 +342,36 @@
     let ctx, canvas;
     let cellSize;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      canvas = document.getElementById('mazeCanvas');
-      ctx = canvas.getContext('2d');
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
-      generateNewMaze(); // первый запуск — новый лабиринт
-      render();
+   document.addEventListener('DOMContentLoaded', () => {
+  canvas = document.getElementById('mazeCanvas');
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
-      document.getElementById('new-maze').addEventListener('click', generateNewMaze);
-      document.getElementById('replay').addEventListener('click', replay);
-      document.getElementById('close-modal').addEventListener('click', () => {
-        document.getElementById('win-modal').style.display = 'none';
-        replay(); // после победы — Replay (сохраняет лабиринт)
-      });
+  generateNewMaze(); // он сам вызывает render() в конце
 
-      // Стрелки
-      document.getElementById('up').addEventListener('click', () => movePlayer(0, -1));
-      document.getElementById('down').addEventListener('click', () => movePlayer(0, 1));
-      document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0));
-      document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
+  document.getElementById('new-maze').addEventListener('click', generateNewMaze);
+  document.getElementById('replay').addEventListener('click', replay);
+  document.getElementById('close-modal').addEventListener('click', () => {
+    document.getElementById('win-modal').style.display = 'none';
+    replay();
+  });
 
-      document.addEventListener('keydown', (e) => {
-        switch (e.key) {
-          case 'ArrowUp': movePlayer(0, -1); break;
-          case 'ArrowDown': movePlayer(0, 1); break;
-          case 'ArrowLeft': movePlayer(-1, 0); break;
-          case 'ArrowRight': movePlayer(1, 0); break;
-        }
-      });
-    });
+  // Стрелки
+  document.getElementById('up').addEventListener('click', () => movePlayer(0, -1));
+  document.getElementById('down').addEventListener('click', () => movePlayer(0, 1));
+  document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0));
+  document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowUp': movePlayer(0, -1); break;
+      case 'ArrowDown': movePlayer(0, 1); break;
+      case 'ArrowLeft': movePlayer(0, -1); break;
+      case 'ArrowRight': movePlayer(1, 0); break;
+    }
+  });
+});
 
     function resizeCanvas() {
       const container = document.getElementById('canvas-container');
