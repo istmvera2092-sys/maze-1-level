@@ -364,13 +364,20 @@ goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
   document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
 
   document.addEventListener('keydown', (e) => {
-    switch (e.key) {
-      case 'ArrowUp': movePlayer(0, -1); break;
-      case 'ArrowDown': movePlayer(0, 1); break;
-      case 'ArrowLeft': movePlayer(0, -1); break;
-      case 'ArrowRight': movePlayer(1, 0); break;
-    }
-  });
+  switch (e.key) {
+    case 'ArrowUp':
+      movePlayer(0, -1);
+      break;
+    case 'ArrowDown':
+      movePlayer(0, 1);
+      break;
+    case 'ArrowLeft':
+      movePlayer(-1, 0);   // ✅ исправлено: шаг по x влево
+      break;
+    case 'ArrowRight':
+      movePlayer(1, 0);
+      break;
+  }
 });
 
     function resizeCanvas() {
