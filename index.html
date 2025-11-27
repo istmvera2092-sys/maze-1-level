@@ -12,19 +12,19 @@
       box-sizing: border-box;
     }
 
-   body {
-  font-family: 'Merriweather', serif;
-  background-image: url('https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #0d3a23;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px;
-  min-height: 100vh;
-}
+    body {
+      font-family: 'Merriweather', serif;
+      background-image: url('https://i.ibb.co/VpWTTmSB/Chat-GPT-Image-13-2025-23-06-57-1.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #0d3a23;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      min-height: 100vh;
+    }
 
     h1 {
       font-size: 1.8rem;
@@ -60,32 +60,32 @@
     }
 
     .key-icon {
-	  width: 20px;
-	  height: 20px;
-	  border-radius: 4px;
-	  background-size: cover;
-	  background-position: center;
-	  background-repeat: no-repeat;
-	  opacity: 0.3; /* ещё не собран */
-	}
-	.key-icon.collected {
-	opacity: 1;   /* собран — яркий */
-	}
-	
-	/* Первые 3 индикатора — первая еда */
-	#key-0,
-	#key-1,
-	#key-2 {
-	background-image: url('https://i.ibb.co/RTxYh3tG/food2-png.png');
-	}
-	
-	/* Следующие 3 индикатора — вторая еда */
-	#key-3,
-	#key-4,
-	#key-5 {
-	background-image: url('https://i.ibb.co/ymqs99Wd/food1-png.png');
-	}
-	
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.3; /* ещё не собран */
+    }
+    .key-icon.collected {
+      opacity: 1;   /* собран — яркий */
+    }
+
+    /* Первые 3 индикатора — первая еда (food2) */
+    #key-0,
+    #key-1,
+    #key-2 {
+      background-image: url('https://i.ibb.co/nNWShMyS/food2-png.png');
+    }
+
+    /* Следующие 3 индикатора — вторая еда (food1) */
+    #key-3,
+    #key-4,
+    #key-5 {
+      background-image: url('https://i.ibb.co/ymqs99Wd/food1-png.png');
+    }
+
     #canvas-container {
       position: relative;
       width: 100%;
@@ -120,22 +120,23 @@
       background: #089ab8;
       transform: scale(1.05);
     }
-	.arrow-btn {
-	width: 48px;
-	height:48px;
-	padding: 0;
-	margin: 0;
-	background: transparent !important;
-	border: none !important;
-	outline: none !important;
-	box-shadow: none !important;
-	border-radius: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	}
-	
+
+    .arrow-btn {
+      width: 48px;
+      height:48px;
+      padding: 0;
+      margin: 0;
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
     .arrow-btn:active {
       transform: scale(0.97);
     }
@@ -161,24 +162,24 @@
       background: #0da473;
       transform: translateY(-1px);
     }
-	
-	button,
-	.arrow-btn,
-	.btn {
-	outline: none;
-	-webkit-tap-highlight-color: transparent; /* для мобильных браузеров */
-	}
-	
-	button:focus,
-	button:focus-visible,
-	.arrow-btn:focus,
-	.arrow-btn:focus-visible,
-	.btn:focus,
-	.btn:focus-visible {
-	outline: none;
-	box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* оставляем только нашу тень */
-	}
-	
+
+    button,
+    .arrow-btn,
+    .btn {
+      outline: none;
+      -webkit-tap-highlight-color: transparent; /* для мобильных браузеров */
+    }
+
+    button:focus,
+    button:focus-visible,
+    .arrow-btn:focus,
+    .arrow-btn:focus-visible,
+    .btn:focus,
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* оставляем только нашу тень */
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -221,7 +222,7 @@
       .controls {
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: центр;
         width: 100%;
       }
       .arrow-btn {
@@ -258,35 +259,36 @@
       <canvas id="mazeCanvas"></canvas>
     </div>
     <div class="controls">
-  <!-- UP -->
-  <button id="up" class="arrow-btn">
-    <img src="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png"
-         alt="up"
-         style="width: 100%; height: 100%; object-fit: contain;">
-  </button>
+      <!-- UP -->
+      <button id="up" class="arrow-btn">
+        <img src="https://i.ibb.co/zVJmCGN7/Chat-GPT-Image-20-2025-15-42-39.png"
+              alt="up"
+              style="width: 100%; height: 100%; object-fit: contain;">
+      </button>
 
-  <!-- LEFT + RIGHT -->
-  <div style="display:flex; gap:10px; margin-top: 5px; margin-bottom: 5px;">
-    <button id="left" class="arrow-btn">
-      <img src="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png"
-           alt="left"
-           style="width: 100%; height: 100%; object-fit: contain;">
-    </button>
+      <!-- LEFT + RIGHT -->
+      <div style="display:flex; gap:10px; margin-top: 5px; margin-bottom: 5px;">
+        <button id="left" class="arrow-btn">
+          <img src="https://i.ibb.co/rGrwT8Vg/Chat-GPT-Image-20-2025-15-50-24.png"
+                alt="left"
+                style="width: 100%; height: 100%; object-fit: contain;">
+        </button>
 
-    <button id="right" class="arrow-btn">
-      <img src="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png"
-           alt="right"
-           style="width: 100%; height: 100%; object-fit: contain;">
-    </button>
+        <button id="right" class="arrow-btn">
+          <img src="https://i.ibb.co/Q7HvmJZ9/Chat-GPT-Image-20-2025-15-45-58.png"
+                alt="right"
+                style="width: 100%; height: 100%; object-fit: contain;">
+        </button>
+      </div>
+
+      <!-- DOWN -->
+      <button id="down" class="arrow-btn">
+        <img src="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png"
+              alt="down"
+              style="width: 100%; height: 100%; object-fit: contain;">
+      </button>
+    </div>
   </div>
-
-  <!-- DOWN -->
-  <button id="down" class="arrow-btn">
-    <img src="https://i.ibb.co/gMvNCdTk/Chat-GPT-Image-20-2025-15-44-21.png"
-         alt="down"
-         style="width: 100%; height: 100%; object-fit: contain;">
-  </button>
-</div>
 
   <div id="win-modal" class="modal">
     <div class="modal-content">
@@ -305,31 +307,31 @@
     const PLAYER_COLOR = '#06b6d4';
     const GOAL_COLOR = '#10b981';
     const KEY_COLOR = '#fbbf24';
-	
-	// картинка героя
-const playerImg = new Image();
-playerImg.src = 'https://i.ibb.co/tp4n66N4/hero-png.png';
 
-// картинки ключей
-const keyImg1 = new Image();
-keyImg1.src = 'https://i.ibb.co/RTxYh3tG/food2-png.png';
+    // картинка героя
+    const playerImg = new Image();
+    playerImg.src = 'https://i.ibb.co/Cp73qkf2/hero-png.png';
 
-const keyImg2 = new Image();
-keyImg2.src = 'https://i.ibb.co/ymqs99Wd/food1-png.png';
+    // картинки ключей
+    const keyImg1 = new Image();
+    keyImg1.src = 'https://i.ibb.co/nNWShMyS/food2-png.png'; // новая food2
 
-// картинка выхода (goal)
-const goalImg = new Image();
-goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
+    const keyImg2 = new Image();
+    keyImg2.src = 'https://i.ibb.co/ymqs99Wd/food1-png.png'; // прежняя food1
 
-// ✅ как только ЛЮБАЯ из картинок прогрузилась – перерисовываем поле
-[playerImg, keyImg1, keyImg2, goalImg].forEach(img => {
-  img.addEventListener('load', () => {
-    if (canvas && ctx && maze.length > 0) {
-      render();
-    }
-  });
-});
-	 
+    // картинка выхода (goal)
+    const goalImg = new Image();
+    goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
+
+    // ✅ как только ЛЮБАЯ из картинок прогрузилась – перерисовываем поле
+    [playerImg, keyImg1, keyImg2, goalImg].forEach(img => {
+      img.addEventListener('load', () => {
+        if (canvas && ctx && maze.length > 0) {
+          render();
+        }
+      });
+    });
+
     // Глобальное состояние
     let maze = [];
     let originalKeys = []; // сохранённые позиции ключей для Replay
@@ -342,43 +344,48 @@ goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
     let ctx, canvas;
     let cellSize;
 
-   document.addEventListener('DOMContentLoaded', () => {
-  canvas = document.getElementById('mazeCanvas');
-  ctx = canvas.getContext('2d');
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+    document.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('mazeCanvas');
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
 
-  generateNewMaze(); // он сам вызывает render() в конце
+      generateNewMaze();
 
-  document.getElementById('new-maze').addEventListener('click', generateNewMaze);
-  document.getElementById('replay').addEventListener('click', replay);
-  document.getElementById('close-modal').addEventListener('click', () => {
-    document.getElementById('win-modal').style.display = 'none';
-    replay();
-  });
+      document.getElementById('new-maze').addEventListener('click', generateNewMaze);
+      document.getElementById('replay').addEventListener('click', replay);
+      document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('win-modal').style.display = 'none';
+        replay();
+      });
 
-  // Стрелки
-  document.getElementById('up').addEventListener('click', () => movePlayer(0, -1));
-  document.getElementById('down').addEventListener('click', () => movePlayer(0, 1));
-  document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0));
-  document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
+      // стрелки-кнопки
+      document.getElementById('up').addEventListener('click', () => movePlayer(0, -1));
+      document.getElementById('down').addEventListener('click', () => movePlayer(0, 1));
+      document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0));
+      document.getElementById('right').addEventListener('click', () => movePlayer(1, 0));
 
-  document.addEventListener('keydown', (e) => {
-  switch (e.key) {
-    case 'ArrowUp':
-      movePlayer(0, -1);
-      break;
-    case 'ArrowDown':
-      movePlayer(0, 1);
-      break;
-    case 'ArrowLeft':
-      movePlayer(-1, 0);   // ✅ исправлено: шаг по x влево
-      break;
-    case 'ArrowRight':
-      movePlayer(1, 0);
-      break;
-  }
-});
+      // клавиатура
+      document.addEventListener('keydown', (e) => {
+        if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+          e.preventDefault(); // чтобы страница не прокручивалась
+        }
+        switch (e.key) {
+          case 'ArrowUp':
+            movePlayer(0, -1);
+            break;
+          case 'ArrowDown':
+            movePlayer(0, 1);
+            break;
+          case 'ArrowLeft':
+            movePlayer(-1, 0);
+            break;
+          case 'ArrowRight':
+            movePlayer(1, 0);
+            break;
+        }
+      });
+    });
 
     function resizeCanvas() {
       const container = document.getElementById('canvas-container');
@@ -512,7 +519,7 @@ goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
         }
       }
 
-         // Ключи — первые 3 одной картинкой, следующие 3 другой
+      // Ключи — первые 3 одной картинкой, следующие 3 другой
       keys.forEach((key, index) => {
         if (!key.collected) {
           const size = cellSize * 1.5;
@@ -544,31 +551,31 @@ goalImg.src = 'https://i.ibb.co/3JCnKQ2/Chat-GPT-Image-20-2025-15-59-48.png';
         }
       });
 
-     // Выход (если есть)
-if (goal) {
-  if (goalImg.complete && goalImg.naturalWidth) {
-    const size = cellSize * 1.8; // регулируй размер двери
-    ctx.drawImage(
-      goalImg,
-      (goal.x + 0.5) * cellSize - size / 2,
-      (goal.y + 0.5) * cellSize - size / 2,
-      size,
-      size
-    );
-  } else {
-    // запасной круг, если изображение не загрузилось
-    ctx.fillStyle = GOAL_COLOR;
-    ctx.beginPath();
-    ctx.arc(
-      (goal.x + 0.5) * cellSize,
-      (goal.y + 0.5) * cellSize,
-      cellSize * 0.4,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-  }
-}
+      // Выход (если есть)
+      if (goal) {
+        if (goalImg.complete && goalImg.naturalWidth) {
+          const size = cellSize * 1.8; // регулируй размер двери
+          ctx.drawImage(
+            goalImg,
+            (goal.x + 0.5) * cellSize - size / 2,
+            (goal.y + 0.5) * cellSize - size / 2,
+            size,
+            size
+          );
+        } else {
+          // запасной круг, если изображение не загрузилось
+          ctx.fillStyle = GOAL_COLOR;
+          ctx.beginPath();
+          ctx.arc(
+            (goal.x + 0.5) * cellSize,
+            (goal.y + 0.5) * cellSize,
+            cellSize * 0.4,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        }
+      }
 
       // Игрок
       if (playerImg.complete && playerImg.naturalWidth) {
@@ -624,19 +631,17 @@ if (goal) {
       }
     }
 
-   function updateKeysUI() {
-  // обновляем число собранных ключей
-  document.getElementById('keys-collected').textContent = collectedKeys;
+    function updateKeysUI() {
+      // обновляем число собранных ключей
+      document.getElementById('keys-collected').textContent = collectedKeys;
 
-  // проходим по массиву keys и иконкам 1 к 1
-  keys.forEach((key, index) => {
-    const el = document.getElementById(`key-${index}`);
-    if (!el) return;
-    // если этот конкретный ключ собран — добавляем .collected,
-    // если нет — убираем
-    el.classList.toggle('collected', key.collected);
-  });
-}
+      // проходим по массиву keys и иконкам 1 к 1
+      keys.forEach((key, index) => {
+        const el = document.getElementById(`key-${index}`);
+        if (!el) return;
+        el.classList.toggle('collected', key.collected);
+      });
+    }
 
     function checkAllKeysCollected() {
       if (collectedKeys === 6 && !goal) {
